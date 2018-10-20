@@ -1,0 +1,10 @@
+beautifulsoup4==4.6.3
+bs4==0.0.1
+html5lib==1.0.1
+lxml==4.2.5
+mechanize==0.3.7
+pkg-resources==0.0.0
+selenium==3.14.0
+six==1.11.0
+urllib3==1.23
+webencodings==0.5.1
