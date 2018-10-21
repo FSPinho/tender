@@ -99,7 +99,10 @@ class DataProvider extends Component {
             )
             subjects.map(s => {
                 s.o = Object.keys(s.o).map(key => ({...s.o[key], key}))
+                s.o.sort((a, b) => a.t.localeCompare(b.t))
+                s.o = s.o.filter(t => t.c > 10)
             })
+            subjects.sort((a, b) => a.t.localeCompare(b.t))
 
             console.log('DataProvider:doUpdate - Loading bancas...')
             const bancas = ENABLE_FAKE_DATA ? require('./FakeData').default.bancas : await this.doMapToList(

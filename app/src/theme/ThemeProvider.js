@@ -72,7 +72,7 @@ class ThemeProvider extends Component {
                 Animated.timing(
                     this.state.themeAnimationScale,
                     {
-                        toValue: 1.5,
+                        toValue: 0,
                         easing: Easing.bezier(.8, .2, .2, .8),
                         duration: stepDuration
                     }
@@ -90,15 +90,6 @@ class ThemeProvider extends Component {
                 Animated.timing(this.state.themeAnimationOpacity, {toValue: 0, duration: 0}),
             ])
         ]).start()
-    }
-
-    componentDidMount() {
-        setInterval(() => {
-            if(this.state.theme.palette.statusBarStyle === 'light-content')
-                this.doEnableLight()
-            else
-                this.doEnableDark()
-        }, 8 * 1000)
     }
 
     render() {

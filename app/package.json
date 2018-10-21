@@ -9,6 +9,7 @@
     "test": "jest"
   },
   "dependencies": {
+    "@monterosa/react-native-parallax-scroll": "^1.8.0",
     "fuse.js": "^3.2.1",
     "hoist-non-react-statics": "^3.0.1",
     "prop-types": "^15.6.2",

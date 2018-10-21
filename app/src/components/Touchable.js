@@ -29,7 +29,7 @@ class Touchable extends React.Component {
                     TouchableNativeFeedback.Ripple(
                         primary ?
                             theme.palette.primary : theme.palette.backgroundPrimary,
-                        false
+                        true
                     )
                 }
                 onPress={this.onPress}

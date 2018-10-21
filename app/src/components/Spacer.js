@@ -10,8 +10,8 @@ class Spacer extends React.Component {
         const {large, small, vertical, theme, ...props} = this.props
 
         return (<View style={{
-            [vertical ? 'height' : 'width']: large ? theme.metrics.spacing * 4
-                : small ? theme.metrics.spacing : theme.metrics.spacing * 2
+            [vertical ? 'height' : 'width']: large ? theme.metrics.spacing * 2
+                : small ? theme.metrics.spacing / 2 : theme.metrics.spacing
         }} {...props} />)
     }
 }

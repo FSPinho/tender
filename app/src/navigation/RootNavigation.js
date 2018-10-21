@@ -77,10 +77,10 @@ class RootNavigation extends Component {
             },
             [Routes.Topics]: {
                 screen: Topics,
-                navigationOptions: {
-                    title: 'Assuntos',
+                navigationOptions: ({navigation}) => ({
+                    title: navigation.getParam('subject').t,
                     ...stackOptions
-                }
+                })
             },
         }, {navigationOptions: stackOptions})
     }

@@ -39,10 +39,12 @@ class IconButton extends React.Component {
                 <Touchable onPress={onPress} primary={flat || (!primary && !accent)}>
                     <Box
                         style={{
-                            paddingLeft: size === 'small' ? 8 : size === 'big' ? 14 : 12,
-                            paddingRight: size === 'small' ? 8 : size === 'big' ? 14 : 12,
-                            paddingTop: size === 'small' ? 8 : size === 'big' ? 14 : 12,
-                            paddingBottom: size === 'small' ? 8 : size === 'big' ? 14 : 12,
+                            paddingLeft: size === 'small' ? 10 : size === 'big' ? 14 : 12,
+                            paddingRight: size === 'small' ? 10 : size === 'big' ? 14 : 12,
+                            paddingTop: size === 'small' ? 10 : size === 'big' ? 14 : 12,
+                            paddingBottom: size === 'small' ? 10 : size === 'big' ? 14 : 12,
+                            borderRadius: 1000,
+                            overflow: 'hidden'
                         }}
                         centralize
                         color={color || !flat ? (

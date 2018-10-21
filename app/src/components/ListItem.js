@@ -25,17 +25,16 @@ class ListItem extends React.Component {
         return (
             <Box paper style={styles.root} {...props}>
                 <Touchable primary onPress={onPress}>
-                    <Box padding fit centralize>
-                        <Box column fit>
+                    <Box fit centralize>
+                        <Box column fit padding>
                             <Text children={title} bold/>
                             {!!subtitle && <Text children={subtitle} secondary/>}
                             {!!text && <Text children={text}/>}
                         </Box>
-                        <Spacer/>
                         <Box>
-                            <IconButton icon={'heart'} iconComponent={'material-community'} primary={favorite}
-                                        textColor={favorite ? theme.palette.primaryTextPrimary : theme.palette.backgroundPrimaryTextDisabled}
-                                        flat={!favorite}/>
+                            <IconButton icon={'heart'} iconComponent={'material-community'}
+                                        style={{opacity: favorite ? 1 : .2}}
+                                        textColor={favorite ? theme.palette.primary : theme.palette.backgroundPrimaryTextDisabled}/>
                         </Box>
                     </Box>
                 </Touchable>
@@ -55,10 +54,10 @@ ListItem.propTypes = {
 
 const styles = theme => StyleSheet.create({
     root: {
-        marginLeft: theme.metrics.spacing * 2,
-        marginRight: theme.metrics.spacing * 2,
-        marginTop: theme.metrics.spacing,
-        marginBottom: theme.metrics.spacing,
+        marginLeft: theme.metrics.spacing,
+        marginRight: theme.metrics.spacing,
+        marginTop: theme.metrics.spacing / 2,
+        marginBottom: theme.metrics.spacing / 2,
         overflow: 'hidden'
     }
 })
