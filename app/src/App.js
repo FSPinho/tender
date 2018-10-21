@@ -4,12 +4,17 @@ import FireBase from 'react-native-firebase'
 import RootNavigation from "./navigation/RootNavigation";
 import DataProvider from "./api/DataProvider";
 
+console.disableYellowBox = true;
+
 export default class App extends Component {
 
     async componentDidMount() {
+
+        /**
+         * Initialize Firebase Notifications
+         * */
         const enabled = await FireBase.messaging().hasPermission();
         if (enabled) {
-
         } else {
             try {
                 await FireBase.messaging().requestPermission();
@@ -39,6 +44,11 @@ export default class App extends Component {
         this.notificationOpenedListener = FireBase.notifications().onNotificationOpened((notificationOpen) => {
             console.log("onNotificationOpened:", notificationOpen)
         });
+
+        /**
+         * Initializing Firebase Admob
+         * */
+        FireBase.admob().initialize('ca-app-pub-5594222713152935~2780422532')
     }
 
     componentWillUnmount() {

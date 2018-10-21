@@ -67,6 +67,14 @@ class DataProvider extends Component {
         return list
     }
 
+    doRemoveDuplicates = list => {
+        const map = {}
+        list.map(i => {
+            map[i.key] = i
+        })
+        return Object.keys(map).map(k => map[k])
+    }
+
     doUpdate = async () => {
         await this.asyncSetState({
             subjectsLoading: true,
@@ -119,7 +127,10 @@ class DataProvider extends Component {
         })
     }
 
-    doUpdateQuestions = async (s, t, l = 5) => {
+    doUpdateQuestions = async (s, t, l = 3) => {
+
+        await this.asyncSetState({questionsLoading: true})
+
         await this.doOrAlert([
             async () => {
                 const baseQuery = await FireBase.firestore()
@@ -129,14 +140,31 @@ class DataProvider extends Component {
 
                 const {historyMeta} = this.state
 
-                const questions = await this.doMapToList(
+                let questions = await this.doMapToList(
                     historyMeta ?
-                        (await baseQuery.orderBy('x').startAfter(history.lastQuestionIndex).limit(l).get())
+                        (await baseQuery.orderBy('x').startAfter(historyMeta.lastQuestionIndex).limit(l).get())
                         : (await baseQuery.orderBy('x').limit(l).get())
                 )
-                console.log(questions)
+
+                if (questions.length < l) {
+                    const offset = l - questions.length
+                    console.log("DataProvider:doUpdateQuestions - Retrieved questions are not enough, getting more...", offset)
+                    const questionsOffset = await this.doMapToList((await baseQuery.orderBy('x').limit(offset).get()))
+                    await this.doUpdateUserHistoryMeta({
+                        lastQuestionIndex: questionsOffset[questionsOffset.length - 1].x
+                    })
+                    questions = this.doRemoveDuplicates([...questions, ...questionsOffset])
+                } else {
+                    await this.doUpdateUserHistoryMeta({
+                        lastQuestionIndex: questions[questions.length - 1].x
+                    })
+                }
+
+                await this.asyncSetState({questions})
             }
         ], 'Não foi possível baixar as questões!')
+
+        await this.asyncSetState({questionsLoading: false})
     }
 
     doUpdateUser = async ({user}) => {

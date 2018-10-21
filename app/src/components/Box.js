@@ -88,7 +88,7 @@ class Box extends React.PureComponent {
 
         return scroll ?
             (
-                <ScrollView style={styles.scroll}>
+                <ScrollView style={{flex: 1}}>
                     <View style={[styles.scrollInner, _styles]} ref="root" {...anotherProps}>
                         {children}
                     </View>

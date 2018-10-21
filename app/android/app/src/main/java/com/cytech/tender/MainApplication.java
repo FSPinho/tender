@@ -19,6 +19,7 @@ import io.invertase.firebase.auth.RNFirebaseAuthPackage;
 import io.invertase.firebase.firestore.RNFirebaseFirestorePackage;
 import io.invertase.firebase.messaging.RNFirebaseMessagingPackage;
 import io.invertase.firebase.notifications.RNFirebaseNotificationsPackage;
+import io.invertase.firebase.admob.RNFirebaseAdMobPackage;
 
 public class MainApplication extends Application implements ReactApplication {
 
@@ -39,7 +40,8 @@ public class MainApplication extends Application implements ReactApplication {
                     new RNFirebaseAnalyticsPackage(),
                     new RNFirebaseMessagingPackage(),
                     new RNFirebaseNotificationsPackage(),
-                    new RNFirebaseFirestorePackage()
+                    new RNFirebaseFirestorePackage(),
+                    new RNFirebaseAdMobPackage()
             );
         }
 

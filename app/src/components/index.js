@@ -5,6 +5,7 @@ import Loading from './Loading'
 import Button from './Button'
 import IconButton from './IconButton'
 import QuestionItem from './QuestionItem'
+import FadeFronDown from './FadeFronDown'
 
 export {
     Box,
@@ -13,5 +14,6 @@ export {
     Loading,
     Button,
     IconButton,
-    QuestionItem
+    QuestionItem,
+    FadeFronDown
 }

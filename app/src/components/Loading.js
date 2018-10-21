@@ -11,11 +11,12 @@ class Loading extends React.Component {
             active,
             size,
             children,
-            theme
+            theme,
+            ...props
         } = this.props
 
         return (
-            <Box fit pointerEvents={active ? 'none' : 'auto'} rounded>
+            <Box fit pointerEvents={active ? 'none' : 'auto'} rounded {...props}>
                 {children}
 
                 {!!active && (
