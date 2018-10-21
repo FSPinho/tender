@@ -9,7 +9,7 @@ class Touchable extends React.Component {
     pressed = false
 
     onPress = async () => {
-        if (!this.pressed) {
+        if (!this.props.disabled && !this.pressed) {
             this.pressed = true
             setTimeout(() => {
                 this.props.onPress && this.props.onPress()
@@ -20,14 +20,14 @@ class Touchable extends React.Component {
 
     render() {
 
-        const {primary, children, theme, onPress, ...props} = this.props
+        const {primary, children, theme, disabled, onPress, ...props} = this.props
 
         return (Platform.OS === 'android' && Platform.Version >= 21) ? (
             <TouchableNativeFeedback
                 style={{flex: 1, borderRadius: theme.metrics.borderRadius}}
                 background={
                     TouchableNativeFeedback.Ripple(
-                        primary ?
+                        disabled ? 'transparent' : primary ?
                             theme.palette.primary : theme.palette.backgroundPrimary,
                         true
                     )
@@ -47,6 +47,7 @@ class Touchable extends React.Component {
 Touchable.propTypes = {
     theme: PropTypes.any.isRequired,
     primary: PropTypes.bool,
+    disabled: PropTypes.bool,
     onPress: PropTypes.func
 }
 

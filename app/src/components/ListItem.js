@@ -23,7 +23,7 @@ class ListItem extends React.Component {
         index === 0 && console.log('ListItem:render - Rendering:', title)
 
         return (
-            <Box paper style={styles.root} {...props}>
+            <Box paper primary style={styles.root} {...props}>
                 <Touchable primary onPress={onPress}>
                     <Box fit centralize>
                         <Box column fit padding>

@@ -31,16 +31,19 @@ class Button extends React.Component {
                 centralize
 
                 {...props}>
-                <Touchable onPress={onPress} primary={flat || (!primary && !accent)}>
+                <Touchable onPress={onPress} primary={flat || (!primary && !accent)}
+                    disabled={disabled}>
                     <Box
                         style={{
                             paddingLeft: size === 'small' ? 12 : size === 'big' ? 20 : 18,
                             paddingRight: size === 'small' ? 12 : size === 'big' ? 20 : 18,
                             paddingTop: size === 'small' ? 8 : size === 'big' ? 14 : 12,
                             paddingBottom: size === 'small' ? 8 : size === 'big' ? 14 : 12,
+                            borderRadius: theme.metrics.borderRadius,
+                            overflow: 'hidden'
                         }}
                         centralize
-                        color={color || !flat ? (
+                        color={disabled ? theme.palette.backgroundPrimaryTextDisabled : color ? color : !flat ? (
                             primary ? theme.palette.primary
                                 : accent ? theme.palette.accent
                                 : theme.palette.backgroundPrimary
@@ -52,7 +55,7 @@ class Button extends React.Component {
                                     : accent ? theme.palette.accent
                                     : theme.palette.backgroundPrimary
                             ) : (
-                                primary ? theme.palette.primaryTextPrimary
+                                primary ? theme.palette.primaryText
                                     : accent ? theme.palette.accentTextPrimary
                                     : theme.palette.backgroundPrimaryTextPrimary
                             )}

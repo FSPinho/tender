@@ -1,0 +1,12 @@
+{
+  "type": "service_account",
+  "project_id": "cytech-tender",
+  "private_key_id": "b7d4789df747b76f48077e56cb91b5b5bebddfad",
+  "private_key": "-----BEGIN PRIVATE KEY-----\nMIIEvAIBADANBgkqhkiG9w0BAQEFAASCBKYwggSiAgEAAoIBAQCVs1tMZFeichBn\nGhgN+L0NxaNJ8SScfUTvVSZou2qb0lPgayCAUN9dmtkBJaNi/Xe3EH+Ux9hbasGf\nj5BtOye09PHBXOpGGLkIDWXrmdttaA3ih2XptKgwOCJ1b8yy75RVemLVt3QfdzOJ\nf8LhdZb8KBzeX1aVDxBjT+ppzIDUkYyPLsp7KvkUONcqFb6u8IG+I4yglUKCFzLT\nwLyLcILBcr1l/lg8yGkhalztCN7lBeTNst4LrdYL9NrZm4XbZHp3rXRseosvYkTA\nJYWo441ED1uRbyPhaanZmvVEz261HibYUJa0GNyU3MEvVSpZRgkfK2Fsc/Hyx5Qo\nWU1yXvzdAgMBAAECggEAFo2ecBxf7YvUt8vBGv3B8by4VI/9bYwb4hjIgBfYQGCI\nHXPWQi6s8Cu/jMIwYt3/9rcIGZCgImmrgQ/+eM5kNYl/kJugee4IllN6auvTmKCI\nEvxGGNcMTbNvUZUF2GFqzhPxpvQMDR+GxqzWXeQ62oNqkf/4Cd3qoKOuE8FpGV0X\nGZlk8RrulcIt0LuC+5+My4UN19RaRy9nC3L7RuWcTwgq3AtCHlj07WLdrk6fp1B1\nGSXUU+oXjoB35qXO2DbvCczOLI/Mqkvb/oiGjwKuqy2m4tTP3q2xD2Xku84IEsBB\n2ceE4z4hLKnsIaTH5chldlSD0t/XToPQ94/678IQ2wKBgQDRollGq7tZRM+wGm2j\nYQptzfi+m9CgzbUIfwHvkj8V6XO7U0VH8uobzsyJT+mocZXy3T3P6EglqlMdh2uL\nLWD/TveyhFyj8leoHVwpKQi2gTJK/9/ol8peb2NjXjOoU0NVNr4wHJXWPY12862/\nMsn3kSSqws6dxLahX16AmIJzPwKBgQC2z4XJBmtrQx7aoLPLaqo8+vhaOiy3fwGJ\n6x0vh2KUTWyzA2IpaPePzmBMOe0vh56NixtLDLz9QWPC3dsn77vchojTLZ4SiSOz\n3sHq6HEtfnG4nwzFCxHCrmv+LxVUGOknh5UbG9Jny/hfJ7sIMctqMlvA2vGQvQ5N\n340mmDY04wKBgDpr3CVtxpBiNN8G/ncBnD5toFy+X63wpfrwKkHxp9MbdD1IP46F\ni+ikASxjMOLYhMliDs/aFAErLm6URsxKoTWFdFIzwP2PlA4t4Hk4Dk2OQ83S8TuI\n0cTvlesjXZITYjhlQSt3S+qgzMPRtSILrW1o7acJEzu0jpD6WwPLfM9RAoGAZBtf\n96U8TZCD5NT7n/jZIGuOdFpHAnTaMtw9LznEEdIUJDNGHccNSgKJWTSfXde2S2xR\nlddz5ntYVe2HhWcSSMCjTIE+fof6tRTWu/xtfawwOhletMhLAYDiQl8mHtdFVhA4\n5o9luNFJQVJQaTxbV9wbwpAimE/u9VXlxay0gmECgYB7KlUc4DwUBMZSs9K23PZJ\nHKqRuVzIJFVUkng+382TO95B116rhFy7s2HzvO7X3yqJNF8Ji9xahU64vuQyF27p\n1WNhgOb18sBcKSG5nwj3FBjvxfLcGrnGbDR7hfOXoeF/Wf6TN7LLhC038voMEHUd\nUhVWTxW7txbb9sHZ+ERnpA==\n-----END PRIVATE KEY-----\n",
+  "client_email": "firebase-adminsdk-v90mt@cytech-tender.iam.gserviceaccount.com",
+  "client_id": "105512754733338132018",
+  "auth_uri": "https://accounts.google.com/o/oauth2/auth",
+  "token_uri": "https://oauth2.googleapis.com/token",
+  "auth_provider_x509_cert_url": "https://www.googleapis.com/oauth2/v1/certs",
+  "client_x509_cert_url": "https://www.googleapis.com/robot/v1/metadata/x509/firebase-adminsdk-v90mt%40cytech-tender.iam.gserviceaccount.com"
+}

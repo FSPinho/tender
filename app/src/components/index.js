@@ -4,6 +4,7 @@ import Spacer from './Spacer'
 import Loading from './Loading'
 import Button from './Button'
 import IconButton from './IconButton'
+import QuestionItem from './QuestionItem'
 
 export {
     Box,
@@ -11,5 +12,6 @@ export {
     Spacer,
     Loading,
     Button,
-    IconButton
+    IconButton,
+    QuestionItem
 }

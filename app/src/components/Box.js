@@ -50,14 +50,7 @@ class Box extends React.PureComponent {
         const {styles} = theme
 
         const _styles = [
-            styles.box,
-            {
-                backgroundColor: color || (
-                    secondary ? theme.palette.backgroundSecondary
-                        : primary ? theme.palette.backgroundPrimary
-                        : 'transparent'
-                )
-            }
+            styles.box
         ]
 
         if (centralize) _styles.push(styles.centralize)
@@ -82,6 +75,15 @@ class Box extends React.PureComponent {
         if (border) _styles.push(styles.border)
         if (paper) _styles.push(styles.paper)
         if (rounded) _styles.push(styles.rounded)
+
+        _styles.push({
+            backgroundColor: color || (
+                secondary ? theme.palette.backgroundSecondary
+                    : primary ? theme.palette.backgroundPrimary
+                    : 'transparent'
+            )
+        })
+
         if (style) _styles.push(style)
 
         return scroll ?

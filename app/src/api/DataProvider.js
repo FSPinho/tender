@@ -1,30 +1,10 @@
 import React, {Component} from 'react'
 import FireBase from 'react-native-firebase'
 import {Alert} from '../services'
-
-const ENABLE_FAKE_DATA = __DEV__
+import NameUtils from "../services/NameUtils";
 
 const {Provider, Consumer} = React.createContext({
-    data: {
-        /** Questions data */
-        subjects: [],
-        subjectsTimestamp: 0,
-        subjectsLoading: false,
-        questions: [],
-        questionsTimestamp: 0,
-        questionsLoading: false,
-        bancas: [],
-        bancasTimestamp: 0,
-        bancasLoading: false,
-
-        /** User data */
-        history: [],
-        historyTimestamp: 0,
-        historyLoading: false,
-
-        doUpdate: () => {
-        }
-    }
+    data: undefined
 });
 
 export {Consumer}
@@ -34,6 +14,13 @@ class DataProvider extends Component {
         super(props)
 
         this.state = {
+
+            user: undefined,
+
+            /** User data */
+            historyMeta: undefined,
+            historyLoading: false,
+
             /** True if loaded at least once */
             dirty: false,
 
@@ -48,12 +35,10 @@ class DataProvider extends Component {
             bancasTimestamp: 0,
             bancasLoading: false,
 
-            /** User data */
-            history: [],
-            historyTimestamp: 0,
-            historyLoading: false,
-
-            doUpdate: this.doUpdate
+            doUpdate: this.doUpdate,
+            doUpdateQuestions: this.doUpdateQuestions,
+            doUpdateUser: this.doUpdateUser,
+            doUpdateUserHistoryMeta: this.doUpdateUserHistoryMeta
         }
     }
 
@@ -78,7 +63,7 @@ class DataProvider extends Component {
 
     doMapToList = async map => {
         const list = []
-        map.forEach(d => list.push({...d.val(), key: d.key}))
+        map.docs.map(d => list.push({...d.data(), key: d.id}))
         return list
     }
 
@@ -91,12 +76,16 @@ class DataProvider extends Component {
 
         await this.doOrAlert([async () => {
             console.log('DataProvider:doUpdate - Loading subject...')
-            const subjects = ENABLE_FAKE_DATA ? require('./FakeData').default.subjectsTopics : await this.doMapToList(
-                await FireBase.database()
-                    .ref('public/subjects-topics')
-                    .orderByChild("c")
-                    .startAt(1).once()
+            const subjects = await this.doMapToList(
+                await FireBase.firestore()
+                    .collection('subjects-topics')
+                    .where('c', '>', 0)
+                    .orderBy('c')
+                    .get()
             )
+
+            console.log(subjects)
+
             subjects.map(s => {
                 s.o = Object.keys(s.o).map(key => ({...s.o[key], key}))
                 s.o.sort((a, b) => a.t.localeCompare(b.t))
@@ -105,12 +94,10 @@ class DataProvider extends Component {
             subjects.sort((a, b) => a.t.localeCompare(b.t))
 
             console.log('DataProvider:doUpdate - Loading bancas...')
-            const bancas = ENABLE_FAKE_DATA ? require('./FakeData').default.bancas : await this.doMapToList(
-                await FireBase.database().ref('public/bancas').once()
-            )
+            const bancas = []
 
             console.log('DataProvider:doUpdate - Loading history...')
-            const history = []// await this.doMapToList(await FireBase.database().ref('private/history').once())
+            const history = []
 
             console.log('DataProvider:doUpdate - Data downloaded!')
 
@@ -132,9 +119,78 @@ class DataProvider extends Component {
         })
     }
 
+    doUpdateQuestions = async (s, t, l = 5) => {
+        await this.doOrAlert([
+            async () => {
+                const baseQuery = await FireBase.firestore()
+                    .collection('questions')
+                    .where('s', '==', s)
+                    .where('t', '==', t)
+
+                const {historyMeta} = this.state
+
+                const questions = await this.doMapToList(
+                    historyMeta ?
+                        (await baseQuery.orderBy('x').startAfter(history.lastQuestionIndex).limit(l).get())
+                        : (await baseQuery.orderBy('x').limit(l).get())
+                )
+                console.log(questions)
+            }
+        ], 'Não foi possível baixar as questões!')
+    }
+
+    doUpdateUser = async ({user}) => {
+        await this.asyncSetState({
+            user: {
+                key: user.uid,
+                name: NameUtils.getName(user),
+                firstName: NameUtils.getFirstName(user),
+                lastName: NameUtils.getLastName(user),
+                email: user.email,
+                photo: user.photoURL
+            },
+            historyLoading: true,
+        })
+
+        const profileRef = FireBase.firestore()
+            .collection('history')
+            .doc(user.uid)
+        const historySnapshot = await profileRef.get()
+        await this.asyncSetState({
+            historyMeta: historySnapshot.data(),
+            historyLoading: false,
+        })
+    }
+
+    doUpdateUserHistoryMeta = async (meta) => {
+        if (!this.state.user)
+            return
+
+        await this.asyncSetState({historyLoading: true})
+
+        const profileRef = FireBase.firestore()
+            .collection('history')
+            .doc(this.state.user.key)
+        const historySnapshot = await profileRef.get()
+        await profileRef.set({
+            ...historySnapshot.data(),
+            ...meta,
+        })
+        await this.asyncSetState({
+            historyMeta: {
+                ...historySnapshot.data(),
+                ...meta,
+            },
+            historyLoading: false,
+        })
+    }
+
     render() {
         return (
-            <Provider value={{data: this.state}}>
+            <Provider
+                value={{
+                    data: this.state
+                }}>
                 {this.props.children}
             </Provider>
         )

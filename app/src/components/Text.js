@@ -21,6 +21,7 @@ class Text extends React.Component {
             theme,
             secondary,
             disabled,
+            fit,
             ...props
         } = this.props
 
@@ -37,7 +38,7 @@ class Text extends React.Component {
             ),
             textAlign: center ? 'center' : 'left',
             opacity: secondary ? 0.7 : 1,
-        }, style]} {...props} />
+        }, fit ? {flex: 1} : undefined, style]} {...props} />
     }
 }
 
@@ -53,6 +54,7 @@ Text.propTypes = {
     center: PropTypes.bool,
     secondary: PropTypes.bool,
     disabled: PropTypes.bool,
+    fit: PropTypes.bool,
 }
 
 export default withTheme({}, Text)

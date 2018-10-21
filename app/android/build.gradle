@@ -22,10 +22,15 @@ buildscript {
     }
 }
 
+ext {
+    googlePlayServicesVersion = "15.0.1" // <-- this line here tell other modules to overwrite and use this instead of default
+}
+
 allprojects {
     repositories {
         mavenLocal()
         google()
+        maven {url "https://maven.google.com"}
         jcenter()
         maven {
             // All of React Native (JS, Obj-C sources, Android binaries) is installed from npm

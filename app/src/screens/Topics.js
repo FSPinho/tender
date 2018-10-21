@@ -54,7 +54,7 @@ class Topics extends React.Component {
                                 <LineIcon name={'graduation'} color={theme.palette.backgroundPrimaryTextSecondary}
                                           size={96}/>
                                 <Spacer vertical large/>
-                                <Text secondary>Nenhuma matéria para estudar =(</Text>
+                                <Text secondary>Nenhum assunto para estudar =(</Text>
                             </Box>
                         }
                     />

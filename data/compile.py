@@ -102,7 +102,7 @@ def _do_compile():
 	for b in bancas:
 		
 		if _get_key(b['id']) in bancasMap:
-			print 'Collision in bancasMap %s' % _get_key(b['id'])
+			# print 'Collision in bancasMap %s' % _get_key(b['id'])
 			collisions += 1
 
 		bancasMap[_get_key(b['id'])] = {
@@ -112,7 +112,7 @@ def _do_compile():
 	levelsMap = {}
 	for l in levels:
 		levelsMap[_get_key(l['id'])] = {
-			't': l['name']
+			't': l['id']
 		}
 
 	subjectsMap = {}
@@ -121,7 +121,7 @@ def _do_compile():
 	for s in subjects:
 		
 		if _get_key(s['id']) in subjectsMap:
-			print 'Collision in subjectsMap %s' % _get_key(s['id'])
+			# print 'Collision in subjectsMap %s' % _get_key(s['id'])
 			collisions += 1
 
 		subjectsMap[_get_key(s['id'])] = {
@@ -135,7 +135,7 @@ def _do_compile():
 		for t in s['topics']:
 
 			if _get_key(t['id']) in topicsMap:
-				print 'Collision in topicsMap %s %s' % (_get_key(t['id']), t['id'])
+				# print 'Collision in topicsMap %s %s' % (_get_key(t['id']), t['id'])
 				collisions += 1
 
 			topicsMap[_get_key(t['id'])] = {
@@ -149,6 +149,7 @@ def _do_compile():
 
 	questionsMap = {}
 	skipped = 0
+	question_index = 0
 	for q in questions:
 		if q:
 			_q = {
@@ -166,13 +167,18 @@ def _do_compile():
 			if q and 'p' in q and len(_q['p']) and cAnswers == 1:
 				subjectsTopicsMap[_q['s']]['c'] += 1
 				subjectsTopicsMap[_q['s']]['o'][_q['t']]['c'] += 1
+				_q['x'] = question_index
+				question_index += 1
 				questionsMap[_get_key(q['i'])] = _q
 			else:
+				print 'Skipped due no text'
 				skipped += 1
 		else:
+			print 'Skippedd due None'
 			skipped += 1
 	print 'Skipped questions: %d' % skipped
 	print 'Collisions: %d' % collisions
+	print 'Questions length: %d' % question_index
 
 
 	return {
@@ -182,6 +188,7 @@ def _do_compile():
 			'subjects-topics': subjectsTopicsMap,
 			'bancas': bancasMap,
 			'questions': questionsMap,
+			'questions_count': question_index
 		}
 	}
 

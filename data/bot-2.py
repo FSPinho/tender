@@ -379,7 +379,9 @@ def retrieve_questions(driver):
 
 
 driver = webdriver.Firefox()
-sign_in(driver)
-retrieve_questions(driver)
+
+# sign_in(driver)
+# retrieve_questions(driver)
+retrieve_refs(driver)
 
 driver.close()
