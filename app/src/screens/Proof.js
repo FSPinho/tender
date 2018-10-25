@@ -10,6 +10,8 @@ import Text from "../components/Text";
 import Spacer from "../components/Spacer";
 import Button from "../components/Button";
 import FireBase from 'react-native-firebase'
+import Icon from "react-native-vector-icons/MaterialCommunityIcons";
+import Palette from "../theme/Palette";
 
 const Banner = FireBase.admob.Banner
 
@@ -21,17 +23,54 @@ class Proof extends React.Component {
         this.state = {
             questionsPrepared: false,
             questionsCount: 0,
-            questionsAnswers: {}
+            questionsIndex: -1,
+            questionsVisible: false,
+            questionsAnswers: {},
+            questionsEnded: false,
+            points: 0.0,
+            grade: 0.0
         }
     }
+
+    asyncSetState = async state =>
+        new Promise(a => this.setState({...this.state, ...state}, a))
 
     doPrepareQuestions = async (questionsCount) => {
         await this.props.data.doUpdateQuestions(this.subject.key, this.topic.key, questionsCount)
         const questions = this.props.data.questions
-        this.setState({
+        await this.asyncSetState({
             questionsPrepared: true,
             questionsCount: questions.length
         })
+        await this.doForwardQuestion()
+    }
+
+    doAnswerQuestion = async (q, accepted) => {
+        await this.asyncSetState({
+            questionsAnswers: {
+                [q.key]: accepted,
+            },
+            points: this.state.points + (accepted ? 1 : 0),
+        })
+    }
+
+    doForwardQuestion = async () => {
+        const {questionsIndex} = this.state
+        await this.asyncSetState({questionsVisible: false})
+        setTimeout(async () => {
+            await this.asyncSetState({questionsIndex: questionsIndex + 1})
+            if (this.state.questionsIndex >= this.state.questionsCount)
+                await this.asyncSetState({
+                    questionsEnded: true,
+                    grade: this.state.points / this.state.questionsCount * 10
+                })
+            else
+                await this.asyncSetState({questionsVisible: true})
+        }, 400)
+    }
+
+    doFinish = () => {
+        this.props.navigation.goBack()
     }
 
     get topic() {
@@ -44,34 +83,79 @@ class Proof extends React.Component {
 
     render() {
         const {data} = this.props
-        const {questionsPrepared} = this.state
+        const {questionsPrepared, questionsIndex, questionsVisible, questionsEnded, grade} = this.state
+
+        const questions = data.questions
+        const question = questions[questionsIndex] || {}
 
         return (
             <Box fit primary column centralize>
+                <Box fit secondary>
+                    <Loading active={data.questionsLoading}
+                             size={56} centralize fit>
+                        <FadeFromDown visible={!questionsPrepared}
+                                      style={StyleSheet.absoluteFillObject}>
+                            <Box fit centralize padding>
+                                <Box padding paper centralize column primary>
+                                    <Text primary>{this.subject.t}</Text>
+                                    <Text secondary>{this.topic.t}</Text>
 
-                <Box fit secondary centralize>
-                    <Loading active={data.questionsLoading} size={56} centralize fit>
-                        <FadeFromDown visible={!questionsPrepared}>
-                            <Box padding paper centralize column primary>
-                                <Text primary>{this.subject.t}</Text>
-                                <Text secondary>{this.topic.t}</Text>
+                                    <Spacer vertical large/>
 
-                                <Spacer vertical large/>
+                                    <Button onPress={() => this.doPrepareQuestions(1)}
+                                            flat primary>
+                                        SIMULADO RÁPIDO: 1 QUESTÂO
+                                    </Button>
+                                    <Spacer vertical small/>
+                                    <Button onPress={() => this.doPrepareQuestions(2)}
+                                            flat primary>
+                                        SIMULADO NORMAL: 2 QUESTÕES
+                                    </Button>
+                                    <Spacer vertical small/>
+                                    <Button onPress={() => this.doPrepareQuestions(3)}
+                                            flat primary>
+                                        SIMULADO LONGO: 3 QUESTÕES
+                                    </Button>
+                                </Box>
+                            </Box>
+                        </FadeFromDown>
 
-                                <Button onPress={() => this.doPrepareQuestions(1)}
-                                        flat primary>
-                                    SIMULADO RÁPIDO: 1 QUESTÂO
-                                </Button>
-                                <Spacer vertical small/>
-                                <Button onPress={() => this.doPrepareQuestions(2)}
-                                        flat primary>
-                                    SIMULADO NORMAL: 2 QUESTÕES
-                                </Button>
-                                <Spacer vertical small/>
-                                <Button onPress={() => this.doPrepareQuestions(3)}
-                                        flat primary>
-                                    SIMULADO LONGO: 3 QUESTÕES
-                                </Button>
+                        <FadeFromDown visible={questionsPrepared && questionsVisible}
+                                      style={StyleSheet.absoluteFillObject}>
+                            <QuestionItem
+                                text={question.p || []}
+                                answers={(question.a || []).map(q => ({text: q.t, correct: !!q.c}))}
+                                onAnswered={accepted => this.doAnswerQuestion(question, accepted)}
+                                onNextQuestionRequired={this.doForwardQuestion}/>
+                        </FadeFromDown>
+
+                        <FadeFromDown visible={questionsEnded}
+                                      style={StyleSheet.absoluteFillObject}>
+                            <Box fit centralize padding>
+                                <Box padding paper centralize column primary>
+                                    <Icon
+                                        name={grade > 6 ? 'emoticon' : 'emoticon-dead'}
+                                        size={56}
+                                        color={grade > 6 ? Palette.Green : Palette.Red}/>
+                                    <Spacer vertical/>
+                                    <Box centralize>
+                                        <Text>
+                                            Sua nota:
+                                        </Text>
+                                        <Spacer small/>
+                                        <Text children={grade.toFixed(2)} size={20}
+                                              weight={'900'}
+                                              color={grade > 6 ? Palette.Green : Palette.Red}/>
+                                    </Box>
+                                    <Spacer vertical/>
+                                    <Text>
+                                        {grade > 6 ? 'Parabéns!!!' : 'Mais sorte na próxima!'}
+                                    </Text>
+                                    <Spacer vertical/>
+                                    <Box centralize>
+                                        <Button onPress={this.doFinish} primary>FINALIZAR</Button>
+                                    </Box>
+                                </Box>
                             </Box>
                         </FadeFromDown>
                     </Loading>

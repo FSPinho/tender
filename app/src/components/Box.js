@@ -77,7 +77,7 @@ class Box extends React.PureComponent {
         if (rounded) _styles.push(styles.rounded)
 
         _styles.push({
-            backgroundColor: color || (
+            backgroundColor: color ? color : (
                 secondary ? theme.palette.backgroundSecondary
                     : primary ? theme.palette.backgroundPrimary
                     : 'transparent'

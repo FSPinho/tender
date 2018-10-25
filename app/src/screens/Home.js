@@ -12,24 +12,6 @@ import {Routes} from "../navigation/RootNavigation";
 
 class Home extends React.Component {
 
-    componentDidMount() {
-        if(this.props.data.subjects.length) {
-            this.props.navigation.navigate(Routes.Proof, {
-                subject: this.props.data.subjects[0],
-                topic: this.props.data.subjects[0].o[0],
-            })
-        }
-    }
-
-    componentWillReceiveProps(nextProps) {
-        if(nextProps.data.subjects.length) {
-            this.props.navigation.navigate(Routes.Proof, {
-                subject: nextProps.data.subjects[0],
-                topic: nextProps.data.subjects[0].o[0],
-            })
-        }
-    }
-
     shouldComponentUpdate(nextProps) {
         return this.props.data.subjectsLoading !== nextProps.data.subjectsLoading
     }

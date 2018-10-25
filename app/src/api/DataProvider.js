@@ -129,6 +129,8 @@ class DataProvider extends Component {
 
     doUpdateQuestions = async (s, t, l = 3) => {
 
+        console.log(s, t, l)
+
         await this.asyncSetState({questionsLoading: true})
 
         await this.doOrAlert([
@@ -151,7 +153,7 @@ class DataProvider extends Component {
                     console.log("DataProvider:doUpdateQuestions - Retrieved questions are not enough, getting more...", offset)
                     const questionsOffset = await this.doMapToList((await baseQuery.orderBy('x').limit(offset).get()))
                     await this.doUpdateUserHistoryMeta({
-                        lastQuestionIndex: questionsOffset[questionsOffset.length - 1].x
+                        lastQuestionIndex: (questionsOffset[questionsOffset.length - 1] || questions[questions.length - 1] || []).x
                     })
                     questions = this.doRemoveDuplicates([...questions, ...questionsOffset])
                 } else {

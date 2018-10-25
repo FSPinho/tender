@@ -25,7 +25,7 @@ class FadeFromDown extends React.Component {
         Animated.timing(this.state.progress, {
             toValue,
             easing: Easing.bezier(.8, .2, .2, .8),
-            duration: duration || 800
+            duration: duration || 400
         }).start()
     }
 
@@ -35,6 +35,7 @@ class FadeFromDown extends React.Component {
 
         return (<Animated.View pointerEvents={visible ? 'auto' : 'none'} style={[
             {
+                flex: 1,
                 transform: [{
                     translateY: this.state.progress.interpolate({
                         inputRange: [0, 1],

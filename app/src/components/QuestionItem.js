@@ -1,5 +1,5 @@
 import React from 'react'
-import {StyleSheet} from 'react-native'
+import {StyleSheet, ScrollView} from 'react-native'
 import {withTheme} from "../theme";
 import Loading from "../components/Loading";
 import {Box, Text} from "../components";
@@ -24,6 +24,15 @@ class QuestionItem extends React.Component {
         }
     }
 
+    componentWillReceiveProps(nextProps) {
+        if (JSON.stringify(this.props.text) !== JSON.stringify(nextProps.text))
+            this.setState({
+                answer: -1,
+                answered: false,
+                correct: -1
+            })
+    }
+
     doSelectAnswer = i =>
         this.setState({
             ...this.state,
@@ -36,12 +45,20 @@ class QuestionItem extends React.Component {
         this.setState({
             answered: true,
             correct,
+        }, () => {
+            setTimeout(() => {
+                if (this.refs.scroll)
+                    this.refs.scroll.scrollToEnd({animated: true})
+            }, 500)
         })
         this.props.onAnswered && this.props.onAnswered(this.state.answer === correct)
     }
 
-    doRequireNext = () =>
+    doRequireNext = () => {
         this.props.onNextQuestionRequired && this.props.onNextQuestionRequired()
+        if (this.refs.scroll)
+            this.refs.scroll.scrollTo({y: 0, x: 0, animated: true})
+    }
 
     render() {
         const {
@@ -58,87 +75,89 @@ class QuestionItem extends React.Component {
         const {answer, answered, correct} = this.state
 
         return (
-            <Box secondary fit padding scroll>
-                <Loading active={false} size={56}>
-                    <Box paper fit column primary paddingSmall>
-                        <Box marginSmall>
-                            {
-                                typeof text === 'string' ? (
-                                    <Text fit weight={'300'}>{text}</Text>
-                                ) : (
-                                    text.map(t => (<Text fit weight={'300'}>{t}</Text>))
-                                )
-                            }
-                        </Box>
+            <ScrollView style={{flex: 1}} ref="scroll">
+                <Box secondary fit padding column>
+                    <Loading active={false} size={56}>
+                        <Box paper fit column primary paddingSmall>
+                            <Box marginSmall>
+                                {
+                                    typeof text === 'string' ? (
+                                        <Text fit weight={'300'}>{text}</Text>
+                                    ) : (
+                                        text.map(t => (<Text key={t} fit weight={'300'}>{t}</Text>))
+                                    )
+                                }
+                            </Box>
 
-                        <Box column paddingSmall secondary marginSmall rounded
-                             pointerEvents={answered ? 'none' : 'auto'}>
-                            {
-                                answers.map((a, i) => (
-                                    <Box key={i}
-                                         paper
-                                         primary
-                                         style={{elevation: answer === i ? 8 : 0, marginBottom: 1}}>
-                                        <Touchable primary onPress={() => this.doSelectAnswer(i)}>
-                                            <Box alignCenter paddingSmall fit>
-                                                <Box paddingSmall fit>
-                                                    <Text
-                                                        weight={'900'}>{QUESTION_LETTERS[i]}.</Text>
-                                                    <Spacer/>
-                                                    <Text fit weight={'300'}>{a.text}</Text>
+                            <Box column paddingSmall secondary marginSmall rounded
+                                 pointerEvents={answered ? 'none' : 'auto'}>
+                                {
+                                    answers.map((a, i) => (
+                                        <Box key={i}
+                                             paper
+                                             primary
+                                             style={{elevation: answer === i ? 8 : 0, marginBottom: 1}}>
+                                            <Touchable primary onPress={() => this.doSelectAnswer(i)}>
+                                                <Box alignCenter paddingSmall fit>
+                                                    <Box paddingSmall fit>
+                                                        <Text
+                                                            weight={'900'}>{QUESTION_LETTERS[i]}.</Text>
+                                                        <Spacer/>
+                                                        <Text fit weight={'300'}>{a.text}</Text>
+                                                    </Box>
+                                                    <Box paddingSmall
+                                                         style={{borderRadius: 192}}>
+                                                        <Icon
+                                                            name={'check'}
+                                                            size={36}
+                                                            color={answer === i ? Palette.Green : theme.palette.backgroundPrimaryTextDisabled}
+                                                            weight={'900'}
+                                                            style={{opacity: answer === i ? 1 : 0.3}}/>
+                                                    </Box>
                                                 </Box>
-                                                <Box paddingSmall
-                                                     style={{borderRadius: 192}}>
-                                                    <Icon
-                                                        name={'check'}
-                                                        size={36}
-                                                        color={answer === i ? Palette.Green : theme.palette.backgroundPrimaryTextDisabled}
-                                                        weight={'900'}
-                                                        style={{opacity: answer === i ? 1 : 0.3}}/>
-                                                </Box>
-                                            </Box>
-                                        </Touchable>
-                                    </Box>
-                                ))
-                            }
-                        </Box>
-                        <Box centralize paddingSmall>
-                            {
-                                !!answered ? (
-                                    <Box fit centralize column>
-                                        <Icon
-                                            name={correct === answer ? 'emoticon' : 'emoticon-dead'}
-                                            size={56}
-                                            color={correct === answer ? Palette.Green : Palette.Red}/>
-                                        <Spacer vertical/>
-                                        <Text>
-                                            {correct === answer ? 'Você acertou!!!' : 'Você errou!'}
-                                        </Text>
-                                        <Box centralize>
+                                            </Touchable>
+                                        </Box>
+                                    ))
+                                }
+                            </Box>
+                            <Box centralize paddingSmall>
+                                {
+                                    !!answered ? (
+                                        <Box fit centralize column>
+                                            <Icon
+                                                name={correct === answer ? 'emoticon' : 'emoticon-dead'}
+                                                size={56}
+                                                color={correct === answer ? Palette.Green : Palette.Red}/>
+                                            <Spacer vertical/>
                                             <Text>
-                                                Alternativa correta:
+                                                {correct === answer ? 'Você acertou!!!' : 'Você errou!'}
                                             </Text>
-                                            <Spacer small/>
-                                            <Text children={QUESTION_LETTERS[correct].toUpperCase()} size={20}
-                                                  weight={'900'}
-                                                  color={correct === answer ? Palette.Green : Palette.Red}/>
+                                            <Box centralize>
+                                                <Text>
+                                                    Alternativa correta:
+                                                </Text>
+                                                <Spacer small/>
+                                                <Text children={QUESTION_LETTERS[correct].toUpperCase()} size={20}
+                                                      weight={'900'}
+                                                      color={correct === answer ? Palette.Green : Palette.Red}/>
+                                            </Box>
+                                            <Spacer vertical/>
+                                            <Box fit centralize>
+                                                <Button onPress={this.doRequireNext} primary>PRÓXIMA</Button>
+                                            </Box>
                                         </Box>
-                                        <Spacer vertical/>
-                                        <Box fit centralize>
-                                            <Button onPress={this.doRequireNext} primary>PRÓXIMA</Button>
+                                    ) : (
+                                        <Box>
+                                            <Button disabled={answer === -1} onPress={this.doSubmit}
+                                                    primary>SUBMETER</Button>
                                         </Box>
-                                    </Box>
-                                ) : (
-                                    <Box>
-                                        <Button disabled={answer === -1} onPress={this.doSubmit}
-                                                primary>SUBMETER</Button>
-                                    </Box>
-                                )
-                            }
+                                    )
+                                }
+                            </Box>
                         </Box>
-                    </Box>
-                </Loading>
-            </Box>
+                    </Loading>
+                </Box>
+            </ScrollView>
         )
     }
 }

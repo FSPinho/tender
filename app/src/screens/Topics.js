@@ -8,6 +8,7 @@ import Box from "../components/Box";
 import Text from "../components/Text";
 import Spacer from "../components/Spacer";
 import LineIcon from 'react-native-vector-icons/SimpleLineIcons'
+import {Routes} from "../navigation/RootNavigation";
 
 class Topics extends React.Component {
 
@@ -17,11 +18,18 @@ class Topics extends React.Component {
 
     get items() {
         const subject = this.props.navigation.getParam('subject')
-        if(subject) {
+        if (subject) {
             return subject.o
         } else {
             return this.props.data.subjects
         }
+    }
+
+    doOpenProof = (topic) => {
+        this.props.navigation.navigate(Routes.Proof, {
+            subject: this.props.navigation.getParam('subject'),
+            topic: topic,
+        })
     }
 
     render() {
@@ -43,7 +51,8 @@ class Topics extends React.Component {
                                 <ListItem index={index}
                                           title={item.t}
                                           subtitle={`${item.c} questões`}
-                                          favorite={index % 7 === 0}/>
+                                          favorite={index % 7 === 0}
+                                          onPress={() => this.doOpenProof(item)}/>
                         }
                         ListEmptyComponent={
                             !data.subjectsLoading &&
