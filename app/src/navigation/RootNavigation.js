@@ -1,10 +1,11 @@
 import React, {Component} from 'react'
 import {withTheme} from "../theme";
 import {createMaterialTopTabNavigator, createStackNavigator, createSwitchNavigator} from "react-navigation";
-import {Home, Proof, Topics, Login} from "../screens";
+import {Home, Proof, Topics, Login, Loved} from "../screens";
 import LineIcon from 'react-native-vector-icons/SimpleLineIcons'
 import Header from "./Header";
 import Tabs from "./Tabs";
+import IconButton from '../components/IconButton'
 
 export const Routes = {
     Login: 'LOGIN',
@@ -32,7 +33,10 @@ class RootNavigation extends Component {
         }
 
         const stackOptions = {
-            header: (props) => <Header {...props}/>
+            header: (props) => <Header {...props}/>,
+			headerRight: <IconButton
+				onPress={theme.doToggleTheme}
+				icon={'weather-night'} iconComponent={'material-community'} flat/>
         }
 
         this.Nav = createSwitchNavigator({
@@ -57,25 +61,13 @@ class RootNavigation extends Component {
                         [Routes.Loved]: {
                             screen: createStackNavigator({
                                 [Routes.Loved]: {
-                                    screen: Home,
+                                    screen: Loved,
                                     navigationOptions: {title: 'Favoritos', ...stackOptions}
                                 }
                             }),
                             navigationOptions: {
                                 tabBarIcon: props => <Icon {...props} name={'heart'}/>,
                                 title: 'Favoritos'
-                            }
-                        },
-                        [Routes.Stats]: {
-                            screen: createStackNavigator({
-                                [Routes.Stats]: {
-                                    screen: Home,
-                                    navigationOptions: {title: 'Desempenho', ...stackOptions}
-                                }
-                            }),
-                            navigationOptions: {
-                                tabBarIcon: props => <Icon {...props} name={'graph'}/>,
-                                title: 'Desempenho'
                             }
                         }
                     }, tabOptions),

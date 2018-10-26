@@ -37,22 +37,24 @@
 		"users": {
 			"$uid": {
 				"history": {
-					"proofs": {
-						"$pid": {
-							"t": "...", // Topic
-							"s": "...", // Subject
-							"d": "...", // Timestamp
-							"r": "...", // Reverse timestamp
-							"g": "..."  // Grade received
-						}
-					},
-					"questions": {
-						"$qid": {
-							"a": "...", // Accepted/Rejected
-							"l": "...", // Last try timestamp
-							"t": "...", // Tries
-
-						}
+					"lastQuestionIndex": "..."
+				},
+				"proofs": {
+					"$pid": {
+						"t": "...", // Topic
+						"s": "...", // Subject
+						"d": "...", // Timestamp
+						"r": "...", // Reverse timestamp
+						"g": "..."  // Grade received
+					}
+				},
+				"questions": {
+					"$qid": {
+						"t": "...", // Topic
+						"s": "...", // Subje
+						"d": "...", // Timestamp
+						"r": "...",  // Reverse Timestamp
+						"a": "..." // Accepted/Rejected
 					}
 				}
 			}
@@ -65,19 +67,19 @@
 1. Choose a subject
 2. Choose a topic by clicking in play button
 3. Prompt a dialog to show a cool message and confirm start solving
-	3.1 Add a random message and get user name
-	3.2 Choose the amount of questions 
-		- Quick 7 questions
-		- Normal 14 questions
-		- Inspired 28 questions
+3.1 Add a random message and get user name
+3.2 Choose the amount of questions
+- Quick 7 questions
+- Normal 14 questions
+- Inspired 28 questions
 4. Show the first question.
-	4.1 Retrieve 2 * x questions from server ; order by rejected -> not tried -> fixed
-	4.2 Show x questions
-	4.3 For each question, stores after solved:
-		- Its id
-		- If answered correctly 
-		- Last try timestamp
-		- Try count
+4.1 Retrieve 2 * x questions from server ; order by rejected -> not tried -> fixed
+4.2 Show x questions
+4.3 For each question, stores after solved:
+- Its id
+- If answered correctly
+- Last try timestamp
+- Try count
 5. Show a congratulations message and a finish button
 6. Stores a proof object with topic, subject, timestamp, reverseTimestamp, grade
 7. Show a status screen for this topic

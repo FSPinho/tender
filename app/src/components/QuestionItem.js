@@ -103,7 +103,7 @@ class QuestionItem extends React.Component {
                                                         <Text
                                                             weight={'900'}>{QUESTION_LETTERS[i]}.</Text>
                                                         <Spacer/>
-                                                        <Text fit weight={'300'}>{a.text}</Text>
+                                                        <Text fit weight={'300'}>{a.correct ? '*' : ''}{a.text}</Text>
                                                     </Box>
                                                     <Box paddingSmall
                                                          style={{borderRadius: 192}}>

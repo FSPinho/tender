@@ -9,15 +9,17 @@ export default (styles, _Component) => {
             return (
                 <Consumer>
                     {
-                        ({theme, doEnableDark, doEnableLight}) => {
+                        ({theme, light, doEnableDark, doEnableLight, doToggleTheme}) => {
                             this.styles = typeof styles === 'function' ? styles(theme) : styles
 
                             return (
                                 <_Component
                                     theme={{
                                         ...theme,
+										light,
                                         doEnableLight,
                                         doEnableDark,
+										doToggleTheme,
                                         styles: this.styles
                                     }}
                                     {...props} />

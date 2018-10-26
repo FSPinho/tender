@@ -48,7 +48,14 @@ class Proof extends React.Component {
     doAnswerQuestion = async (q, accepted) => {
         await this.asyncSetState({
             questionsAnswers: {
-                [q.key]: accepted,
+				...this.state.questionsAnswers,
+                [q.key]: {
+					t: this.topic.key,
+					s: this.subject.key,
+					d: +new Date(),
+					r: -+new Date(),
+					a: accepted,
+				},
             },
             points: this.state.points + (accepted ? 1 : 0),
         })
@@ -69,7 +76,17 @@ class Proof extends React.Component {
         }, 400)
     }
 
-    doFinish = () => {
+    doFinish = async () => {
+		await this.props.data.doSaveProof({
+			proof: {
+				t: this.topic.key,
+				s: this.subject.key,
+				d: +new Date(),
+				r: -+new Date(),
+				g: this.state.grade
+			},
+			questions: this.state.questionsAnswers
+		})
         this.props.navigation.goBack()
     }
 
@@ -91,7 +108,7 @@ class Proof extends React.Component {
         return (
             <Box fit primary column centralize>
                 <Box fit secondary>
-                    <Loading active={data.questionsLoading}
+                    <Loading active={data.questionsLoading || data.userLoading || data.proofsLoading}
                              size={56} centralize fit>
                         <FadeFromDown visible={!questionsPrepared}
                                       style={StyleSheet.absoluteFillObject}>
@@ -143,7 +160,7 @@ class Proof extends React.Component {
                                             Sua nota:
                                         </Text>
                                         <Spacer small/>
-                                        <Text children={grade.toFixed(2)} size={20}
+                                        <Text children={isNaN(grade) ? '--' : grade.toFixed(2)} size={20}
                                               weight={'900'}
                                               color={grade > 6 ? Palette.Green : Palette.Red}/>
                                     </Box>

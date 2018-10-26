@@ -10,10 +10,11 @@ import Spacer from "../components/Spacer";
 import LineIcon from 'react-native-vector-icons/SimpleLineIcons'
 import {Routes} from "../navigation/RootNavigation";
 
-class Home extends React.Component {
+class Loved extends React.Component {
 
     shouldComponentUpdate(nextProps) {
         return this.props.data.subjectsLoading !== nextProps.data.subjectsLoading
+			|| this.props.data.lovedsLoading !== nextProps.data.lovedsLoading
     }
 
     doOpenSubject = (subject) => {
@@ -33,7 +34,7 @@ class Home extends React.Component {
                         refreshing={data.subjectsLoading && data.dirty}
                         onRefresh={data.doUpdate}
                         style={styles.list}
-                        data={data.subjects}
+                        data={data.subjects.filter(d => !!data.loveds[d.key])}
                         renderItem={
                             ({item, index}) =>
                                 <ListItem index={index}
@@ -48,10 +49,10 @@ class Home extends React.Component {
                                 <Spacer vertical large/>
                                 <Spacer vertical large/>
                                 <Spacer vertical large/>
-                                <LineIcon name={'graduation'} color={theme.palette.backgroundPrimaryTextSecondary}
+                                <LineIcon name={'heart'} color={theme.palette.backgroundPrimaryTextSecondary}
                                           size={96}/>
                                 <Spacer vertical large/>
-                                <Text center style={{maxWidth: 240}} secondary>Nenhuma matéria para estudar =(</Text>
+                                <Text center style={{maxWidth: 240}} secondary>Suas matérias marcadas como favoritas aparecerão aqui =)</Text>
                             </Box>
                         }
                     />
@@ -67,4 +68,4 @@ const styles = StyleSheet.create({
     }
 })
 
-export default withData(withTheme(styles, Home))
+export default withData(withTheme(styles, Loved))

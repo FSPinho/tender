@@ -17,6 +17,7 @@ class ThemeProvider extends Component {
         super(props)
 
         this.state = {
+			light: true,
             theme: LightTheme,
             themeAnimationScale: new Animated.Value(0),
             themeAnimationOpacity: new Animated.Value(1),
@@ -42,6 +43,10 @@ class ThemeProvider extends Component {
 
         await new Promise(a => {
             Animated.sequence([
+				Animated.parallel([
+	                Animated.timing(this.state.themeAnimationScale, {toValue: 0, duration: 0}),
+	                Animated.timing(this.state.themeAnimationOpacity, {toValue: 0, duration: 0}),
+	            ]),
                 Animated.parallel([
                     Animated.timing(
                         this.state.themeAnimationScale,
@@ -72,7 +77,7 @@ class ThemeProvider extends Component {
                 Animated.timing(
                     this.state.themeAnimationScale,
                     {
-                        toValue: 0,
+                        toValue: 1.5,
                         easing: Easing.bezier(.8, .2, .2, .8),
                         duration: stepDuration
                     }
@@ -92,13 +97,26 @@ class ThemeProvider extends Component {
         ]).start()
     }
 
+	doToggleTheme = async () => {
+		if(this.state.light) {
+			await this.asyncSetState({light: false})
+			await this.doEnableDark()
+		}
+		else {
+			await this.asyncSetState({light: true})
+			await this.doEnableLight()
+		}
+	}
+
     render() {
 
         return (
             <Provider value={{
                 theme: this.state.theme,
+				light: this.state.light,
                 doEnableDark: this.doEnableDark,
                 doEnableLight: this.doEnableLight,
+				doToggleTheme: this.doToggleTheme
             }}>
                 <StatusBar
                     barStyle={this.state.theme.palette.statusBarStyle}
