@@ -22,13 +22,12 @@ class ListItem extends React.Component {
 	}
 
 	render() {
-		const {lovedKey, title, subtitle, text, theme, index, onPress, data, ...props} = this.props
+		const {lovedKey, title, subtitle, text, theme, index, onPress, subjectMeta, data, ...props} = this.props
 		const {styles} = theme
 
 		const favorite = data.loveds[lovedKey]
-		const subjectMeta = data.proofsSubjects[lovedKey]
 
-		index === 0 && console.log('ListItem:render - Rendering:', title, lovedKey, data.loveds)
+		// index === 0 && console.log('ListItem:render - Rendering:', title, lovedKey, data.loveds)
 
 		return (
 			<Box paper primary style={styles.root} {...props}>
@@ -37,13 +36,13 @@ class ListItem extends React.Component {
 						<Box column fit padding>
 							<Text children={title} bold/>
 							{!!subtitle && <Text children={subtitle} secondary/>}
-							{!!subjectMeta && <Text secondary>Você realizou {subjectMeta.proofsCount} simulados</Text>}
+							{!!subjectMeta && <Text secondary>Você realizou {subjectMeta.proofsCount} {subjectMeta.proofsCount === 1 ? 'simulado' : 'simulados'}</Text>}
 							{!!text && <Text children={text}/>}
 						</Box>
 
 						{
 							!!subjectMeta && (
-								<Box column centralize>
+								<Box column centralize padding>
 									<Text children={'Média'} secondary/>
 									<Text children={(subjectMeta.grade/subjectMeta.proofsCount).toFixed(2)} size={20}
 										weight={'900'}
@@ -68,6 +67,7 @@ class ListItem extends React.Component {
 }
 
 ListItem.propTypes = {
+    subjectMeta: PropTypes.any,
 	lovedKey: PropTypes.string,
 	title: PropTypes.string.isRequired,
 	subtitle: PropTypes.string,

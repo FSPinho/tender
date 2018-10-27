@@ -1,11 +1,11 @@
 import React, {Component} from 'react'
 import {withTheme} from "../theme";
 import {createMaterialTopTabNavigator, createStackNavigator, createSwitchNavigator} from "react-navigation";
-import {Home, Proof, Topics, Login, Loved} from "../screens";
+import {Home, Login, Loved, Proof, Topics} from "../screens";
 import LineIcon from 'react-native-vector-icons/SimpleLineIcons'
 import Header from "./Header";
 import Tabs from "./Tabs";
-import IconButton from '../components/IconButton'
+import HeaderTitle from "./HeaderTitle";
 
 export const Routes = {
     Login: 'LOGIN',
@@ -33,10 +33,7 @@ class RootNavigation extends Component {
         }
 
         const stackOptions = {
-            header: (props) => <Header {...props}/>,
-			headerRight: <IconButton
-				onPress={theme.doToggleTheme}
-				icon={'weather-night'} iconComponent={'material-community'} flat/>
+            header: (props) => <Header {...props}/>
         }
 
         this.Nav = createSwitchNavigator({
@@ -50,7 +47,7 @@ class RootNavigation extends Component {
                             screen: createStackNavigator({
                                 [Routes.Home]: {
                                     screen: Home,
-                                    navigationOptions: {title: 'Estudar', ...stackOptions}
+                                    navigationOptions: {headerTitle: <HeaderTitle text={'Matérias'}/>, ...stackOptions}
                                 }
                             }),
                             navigationOptions: {
@@ -62,7 +59,7 @@ class RootNavigation extends Component {
                             screen: createStackNavigator({
                                 [Routes.Loved]: {
                                     screen: Loved,
-                                    navigationOptions: {title: 'Favoritos', ...stackOptions}
+                                    navigationOptions: {headerTitle: <HeaderTitle text={'Matérias Favoritos'}/>, ...stackOptions}
                                 }
                             }),
                             navigationOptions: {
@@ -76,14 +73,14 @@ class RootNavigation extends Component {
                 [Routes.Topics]: {
                     screen: Topics,
                     navigationOptions: ({navigation}) => ({
-                        title: (navigation.getParam('subject') || {}).t,
+                        headerTitle: <HeaderTitle text={[['Matéria', (navigation.getParam('subject') || {}).t], 'Assuntos']}/>,
                         ...stackOptions
                     })
                 },
                 [Routes.Proof]: {
                     screen: Proof,
                     navigationOptions: ({navigation}) => ({
-                        title: 'Simulado › ' + (navigation.getParam('subject') || {}).t,
+                        headerTitle: <HeaderTitle text={[['Matéria', (navigation.getParam('subject') || {}).t], ['Assunto', (navigation.getParam('topic') || {}).t]]}/>,
                         ...stackOptions
                     })
                 },

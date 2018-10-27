@@ -13,7 +13,8 @@ import {Routes} from "../navigation/RootNavigation";
 class Topics extends React.Component {
 
     shouldComponentUpdate(nextProps) {
-        return this.props.data.subjectsLoading !== nextProps.data.subjectsLoading
+        // return this.props.data.subjectsLoading !== nextProps.data.subjectsLoading
+        return true
     }
 
     get items() {
@@ -30,6 +31,15 @@ class Topics extends React.Component {
             subject: this.props.navigation.getParam('subject'),
             topic: topic,
         })
+    }
+
+    doGetSubjectData = item => {
+        const data = this.props.data
+        const subjectKey = this.props.navigation.getParam('subject').key
+        let subjectMeta = undefined
+        if(data.proofsSubjects[subjectKey])
+            subjectMeta = data.proofsSubjects[subjectKey].proofsTopics[item.key]
+        return subjectMeta
     }
 
     render() {
@@ -49,6 +59,7 @@ class Topics extends React.Component {
                         renderItem={
                             ({item, index}) =>
                                 <ListItem index={index}
+                                          subjectMeta={this.doGetSubjectData(item)}
                                           title={item.t}
                                           subtitle={`${item.c} questões`}
                                           favorite={index % 7 === 0}

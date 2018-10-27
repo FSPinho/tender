@@ -2,7 +2,7 @@ import React, {Component} from 'react'
 import {StatusBar, Animated, Easing, StyleSheet, Dimensions} from 'react-native'
 import DarkTheme from "./DarkTheme";
 import LightTheme from "./LightTheme";
-import Box from "../components/Box";
+import AsyncStorage from 'redux-persist-filesystem-storage'
 
 const {Provider, Consumer} = React.createContext({
     theme: undefined,
@@ -28,11 +28,21 @@ class ThemeProvider extends Component {
     asyncSetState = async state =>
         await new Promise(a => requestAnimationFrame(() => this.setState({...this.state, ...state}, a)))
 
-    doEnableDark = async () =>
-        this.doChangeTheme(DarkTheme)
+    async componentDidMount() {
+        console.log(await AsyncStorage.getAllKeys(), await AsyncStorage.getItem("te:theme"))
+        const light = (await AsyncStorage.getItem("te:theme")) === 'light'
+        await this.asyncSetState({light: light, theme: light ? LightTheme : DarkTheme})
+    }
 
-    doEnableLight = async () =>
-        this.doChangeTheme(LightTheme)
+    doEnableDark = async () => {
+        await AsyncStorage.setItem("te:theme", 'dark')
+        await this.doChangeTheme(DarkTheme)
+    }
+
+    doEnableLight = async () => {
+        await AsyncStorage.setItem("te:theme", 'light')
+        await this.doChangeTheme(LightTheme)
+    }
 
     doChangeTheme = async (theme) => {
         await this.asyncSetState({

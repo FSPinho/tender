@@ -1,7 +1,7 @@
 import React from 'react';
-import {View} from 'react-native';
 import {withTheme} from '../theme';
 import PropTypes from "prop-types";
+import Box from "./Box";
 
 class Spacer extends React.Component {
 
@@ -9,9 +9,9 @@ class Spacer extends React.Component {
 
         const {large, small, vertical, theme, ...props} = this.props
 
-        return (<View style={{
-            [vertical ? 'height' : 'width']: large ? theme.metrics.spacing * 2
-                : small ? theme.metrics.spacing / 2 : theme.metrics.spacing
+        return (<Box style={{
+            [vertical ? 'height' : 'width']: large ? (theme.metrics.spacing * 2)
+                : small ? (theme.metrics.spacing / 2) : theme.metrics.spacing
         }} {...props} />)
     }
 }

@@ -37,6 +37,7 @@ class Home extends React.Component {
                         renderItem={
                             ({item, index}) =>
                                 <ListItem index={index}
+                                          subjectMeta={data.proofsSubjects[item.key]}
 										  lovedKey={item.key}
                                           title={item.t}
                                           subtitle={`${item.c} questões`}

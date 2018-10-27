@@ -79,7 +79,7 @@ class QuestionItem extends React.Component {
                 <Box secondary fit padding column>
                     <Loading active={false} size={56}>
                         <Box paper fit column primary paddingSmall>
-                            <Box marginSmall>
+                            <Box marginSmall column>
                                 {
                                     typeof text === 'string' ? (
                                         <Text fit weight={'300'}>{text}</Text>
@@ -103,7 +103,7 @@ class QuestionItem extends React.Component {
                                                         <Text
                                                             weight={'900'}>{QUESTION_LETTERS[i]}.</Text>
                                                         <Spacer/>
-                                                        <Text fit weight={'300'}>{a.correct ? '*' : ''}{a.text}</Text>
+                                                        <Text fit weight={'300'}>{(a.correct && __DEV__) ? '*' : ''}{a.text}</Text>
                                                     </Box>
                                                     <Box paddingSmall
                                                          style={{borderRadius: 192}}>

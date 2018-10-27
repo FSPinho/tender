@@ -73,7 +73,7 @@ class Proof extends React.Component {
                 })
             else
                 await this.asyncSetState({questionsVisible: true})
-        }, 400)
+        }, 800)
     }
 
     doFinish = async () => {

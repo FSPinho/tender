@@ -25,7 +25,7 @@ class FadeFromDown extends React.Component {
         Animated.timing(this.state.progress, {
             toValue,
             easing: Easing.bezier(.8, .2, .2, .8),
-            duration: duration || 400
+            duration: duration || 800
         }).start()
     }
 
