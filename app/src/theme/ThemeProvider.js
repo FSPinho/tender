@@ -3,6 +3,8 @@ import {StatusBar, Animated, Easing, StyleSheet, Dimensions} from 'react-native'
 import DarkTheme from "./DarkTheme";
 import LightTheme from "./LightTheme";
 import AsyncStorage from 'redux-persist-filesystem-storage'
+import FireBase from 'react-native-firebase'
+import {Events} from "../constants/Analytics";
 
 const {Provider, Consumer} = React.createContext({
     theme: undefined,
@@ -37,11 +39,13 @@ class ThemeProvider extends Component {
     doEnableDark = async () => {
         await AsyncStorage.setItem("te:theme", 'dark')
         await this.doChangeTheme(DarkTheme)
+        FireBase.analytics().logEvent(Events.TenderThemeEnableDark)
     }
 
     doEnableLight = async () => {
         await AsyncStorage.setItem("te:theme", 'light')
         await this.doChangeTheme(LightTheme)
+        FireBase.analytics().logEvent(Events.TenderThemeEnableLight)
     }
 
     doChangeTheme = async (theme) => {

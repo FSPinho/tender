@@ -12,6 +12,7 @@ import Button from "../components/Button";
 import FireBase from 'react-native-firebase'
 import Icon from "react-native-vector-icons/MaterialCommunityIcons";
 import Palette from "../theme/Palette";
+import {Events} from "../constants/Analytics";
 
 const Banner = FireBase.admob.Banner
 
@@ -32,6 +33,13 @@ class Proof extends React.Component {
         }
     }
 
+    componentDidMount() {
+        FireBase.analytics().logEvent(Events.TenderOpenProof, {
+            te_subject: this.subject.key,
+            te_topic: this.topic.key,
+        })
+    }
+
     asyncSetState = async state =>
         new Promise(a => this.setState({...this.state, ...state}, a))
 
@@ -43,21 +51,31 @@ class Proof extends React.Component {
             questionsCount: questions.length
         })
         await this.doForwardQuestion()
+        FireBase.analytics().logEvent(Events.TenderProofStart, {
+            te_subject: this.subject.key,
+            te_topic: this.topic.key,
+            te_question_count: questionsCount
+        })
     }
 
     doAnswerQuestion = async (q, accepted) => {
         await this.asyncSetState({
             questionsAnswers: {
-				...this.state.questionsAnswers,
+                ...this.state.questionsAnswers,
                 [q.key]: {
-					t: this.topic.key,
-					s: this.subject.key,
-					d: +new Date(),
-					r: -+new Date(),
-					a: accepted,
-				},
+                    t: this.topic.key,
+                    s: this.subject.key,
+                    d: +new Date(),
+                    r: -+new Date(),
+                    a: accepted,
+                },
             },
             points: this.state.points + (accepted ? 1 : 0),
+        })
+        FireBase.analytics().logEvent(Events.TenderProofQuestionAnswered, {
+            te_subject: this.subject.key,
+            te_topic: this.topic.key,
+            te_question_key: q.key, accepted
         })
     }
 
@@ -66,27 +84,37 @@ class Proof extends React.Component {
         await this.asyncSetState({questionsVisible: false})
         setTimeout(async () => {
             await this.asyncSetState({questionsIndex: questionsIndex + 1})
-            if (this.state.questionsIndex >= this.state.questionsCount)
+            if (this.state.questionsIndex >= this.state.questionsCount) {
                 await this.asyncSetState({
                     questionsEnded: true,
                     grade: this.state.points / this.state.questionsCount * 10
                 })
-            else
+                FireBase.analytics().logEvent(Events.TenderProofGetGrade, {
+                    te_subject: this.subject.key,
+                    te_topic: this.topic.key,
+                    te_grade: this.state.grade
+                })
+            } else {
                 await this.asyncSetState({questionsVisible: true})
+            }
         }, 800)
     }
 
     doFinish = async () => {
-		await this.props.data.doSaveProof({
-			proof: {
-				t: this.topic.key,
-				s: this.subject.key,
-				d: +new Date(),
-				r: -+new Date(),
-				g: this.state.grade
-			},
-			questions: this.state.questionsAnswers
-		})
+        await this.props.data.doSaveProof({
+            proof: {
+                t: this.topic.key,
+                s: this.subject.key,
+                d: +new Date(),
+                r: -+new Date(),
+                g: this.state.grade
+            },
+            questions: this.state.questionsAnswers
+        })
+        FireBase.analytics().logEvent(Events.TenderProofEnd, {
+            te_subject: this.subject.key,
+            te_topic: this.topic.key,
+        })
         this.props.navigation.goBack()
     }
 
@@ -99,14 +127,38 @@ class Proof extends React.Component {
     }
 
     render() {
-        const {data} = this.props
-        const {questionsPrepared, questionsIndex, questionsVisible, questionsEnded, grade} = this.state
+        const {data, theme} = this.props
+        const {questionsPrepared, questionsIndex, questionsCount, questionsVisible, questionsEnded, grade} = this.state
 
         const questions = data.questions
         const question = questions[questionsIndex] || {}
 
         return (
-            <Box fit primary column centralize>
+            <Box fit primary column centralize alignStretch>
+                {
+                    !!questionsPrepared && !questionsEnded && (
+                        <Box style={{elevation: 2}}
+                             primary
+                             padding centralize justifySpaceBetween>
+                            <Box style={{height: 16, borderRadius: 8}}
+                                 color={theme.palette.backgroundSecondary} fit>
+                                <Box
+                                    style={{
+                                        width: `${(questionsIndex + 1) / questionsCount * 100}%`,
+                                        borderRadius: 8
+                                    }}
+                                    color={theme.palette.primary}/>
+                            </Box>
+                            <Spacer/>
+                            <Box>
+                                <Text color={theme.palette.primary} weight={'900'}>
+                                    {questionsIndex + 1}/{questionsCount}
+                                </Text>
+                            </Box>
+                        </Box>
+                    )
+                }
+
                 <Box fit secondary>
                     <Loading active={data.questionsLoading || data.userLoading || data.proofsLoading}
                              size={56} centralize fit>
@@ -178,13 +230,13 @@ class Proof extends React.Component {
                     </Loading>
                 </Box>
 
-                <Box centralize paper padding>
+                <Box centralize paddingSmall style={{elevation: 4}} primary>
                     <TouchableWithoutFeedback
-                        onPress={() => console.log("Proof:render - banner pressed")}>
-                        <Box primary paper centralize>
+                        onPress={() => FireBase.analytics().logEvent(Events.TenderProofBannerClick)}>
+                        <Box primary centralize>
                             <Banner size={'BANNER'}
-                                    onAdLoaded={e => console.log("Ad loaded:", e)}
-                                    onAdFailedToLoad={e => console.log("Can't load banner:", e)}
+                                    onAdLoaded={() => FireBase.analytics().logEvent(Events.TenderProofBannerLoaded)}
+                                    onAdFailedToLoad={() => FireBase.analytics().logEvent(Events.TenderProofBannerError)}
                                     unitId={__DEV__ ? 'ca-app-pub-3940256099942544/6300978111' : 'ca-app-pub-5594222713152935/5215014180'}/>
 
                         </Box>

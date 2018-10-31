@@ -1,7 +1,8 @@
 import React, {Component} from 'react'
 import FireBase from 'react-native-firebase'
 import {Alert} from '../services'
-import NameUtils from "../services/NameUtils";
+import NameUtils from "../services/NameUtils"
+import {Events} from "../constants/Analytics";
 
 const {Provider, Consumer} = React.createContext({
     data: undefined
@@ -189,7 +190,7 @@ class DataProvider extends Component {
     }
 
     doUpdateUser = async ({user}) => {
-        this.asyncSetState({userLoading: true})
+        await this.asyncSetState({userLoading: true})
 
         await this.doOrAlert([
             async () => {
@@ -208,6 +209,14 @@ class DataProvider extends Component {
                         proofsCount: 0,
                     }
                 }
+
+                console.log("DataProvider:doUpdateUser - Sending current user details to analytics...")
+                FireBase.analytics().setUserId(_user.key)
+                FireBase.analytics().setUserProperties({
+                    te_name: _user.name,
+                    te_email: _user.email,
+                    te_photo: _user.photo,
+                })
 
                 const userRef = FireBase.firestore().collection('users').doc(user.uid)
                 const snapshot = await userRef.get()
@@ -256,6 +265,7 @@ class DataProvider extends Component {
                 for (let k of Object.keys(loveds)) {
                     console.log("DataProvider:doUpdateLoveds - Updating:", k, loveds[k])
                     await lovedsRef.doc(k).set({loved: loveds[k]})
+                    FireBase.analytics().logEvent(Events.TenderToggleLoved, {item_key: k, is_loved: loveds[k]})
                 }
 
                 const lovedsMap = {}
@@ -303,7 +313,7 @@ class DataProvider extends Component {
                 })
 
                 for (let k of Object.keys(proofsSubjectsMap)) {
-                    if(proofsSubjectsMap[k].proofsCount) {
+                    if (proofsSubjectsMap[k].proofsCount) {
                         console.log('DataProvider:doUpdateProofsSubjects - Updating subject topics proofs...')
 
                         const proofsTopicsSnapshot = await proofsSubjectsRef.doc(k).collection('topics').get()
@@ -393,8 +403,8 @@ class DataProvider extends Component {
                 const existingProofSubject = this.state.proofsSubjects[proof.s] || {grade: 0, proofsCount: 0}
                 let existingProofTopic = {grade: 0, proofsCount: 0}
 
-                if(this.state.proofsSubjects[proof.s])
-                    if(this.state.proofsSubjects[proof.s].proofsTopics[proof.t])
+                if (this.state.proofsSubjects[proof.s])
+                    if (this.state.proofsSubjects[proof.s].proofsTopics[proof.t])
                         existingProofTopic = this.state.proofsSubjects[proof.s].proofsTopics[proof.t]
 
 

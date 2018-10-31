@@ -1,5 +1,5 @@
 import React from 'react'
-import {FlatList, StyleSheet, RefreshControl} from 'react-native'
+import {FlatList, StyleSheet} from 'react-native'
 import {withTheme} from "../theme";
 import withData from "../api/withData";
 import ListItem, {ITEM_HEIGHT} from "../components/ListItem";
@@ -9,12 +9,19 @@ import Text from "../components/Text";
 import Spacer from "../components/Spacer";
 import LineIcon from 'react-native-vector-icons/SimpleLineIcons'
 import {Routes} from "../navigation/RootNavigation";
+import FireBase from 'react-native-firebase'
+import {Events} from "../constants/Analytics";
+
 
 class Loved extends React.Component {
 
+    componentDidMount() {
+        console.log("Loved:componentDidMount - Sending current screen to analytics...")
+        FireBase.analytics().logEvent(Events.TenderOpenLoved)
+    }
+
     shouldComponentUpdate(nextProps) {
-        return this.props.data.subjectsLoading !== nextProps.data.subjectsLoading
-			|| this.props.data.lovedsLoading !== nextProps.data.lovedsLoading
+        return true
     }
 
     doOpenSubject = (subject) => {
@@ -27,7 +34,7 @@ class Loved extends React.Component {
 
         return (
             <Box secondary fit>
-                <Loading active={data.subjectsLoading && !data.dirty} size={56}>
+                <Loading active={(data.subjectsLoading || data.lovedsLoading) && !data.dirty} size={56}>
                     <FlatList
                         ListHeaderComponent={<Spacer small vertical/>}
                         ListFooterComponent={<Spacer small vertical/>}

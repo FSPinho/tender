@@ -28,7 +28,7 @@ class RootNavigation extends Component {
             tabBarPosition: 'bottom',
             swipeEnabled: true,
             animationEnabled: true,
-            lazy: false,
+            lazy: true,
             tabBarComponent: props => <Tabs {...props}/>
         }
 

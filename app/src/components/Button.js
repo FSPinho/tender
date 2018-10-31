@@ -32,7 +32,7 @@ class Button extends React.Component {
 
                 {...props}>
                 <Touchable onPress={onPress} primary={flat || (!primary && !accent)}
-                    disabled={disabled}>
+                           disabled={disabled}>
                     <Box
                         style={{
                             paddingLeft: size === 'small' ? 12 : size === 'big' ? 20 : 18,
@@ -48,20 +48,24 @@ class Button extends React.Component {
                                 : accent ? theme.palette.accent
                                 : theme.palette.backgroundPrimary
                         ) : 'transparent'}>
-                        <Text
-                            size={size === 'small' ? 10 : size === 'big' ? 24 : 14}
-                            color={textColor ? textColor : flat ? (
-                                primary ? theme.palette.primary
-                                    : accent ? theme.palette.accent
-                                    : theme.palette.backgroundPrimary
-                            ) : (
-                                primary ? theme.palette.primaryText
-                                    : accent ? theme.palette.accentTextPrimary
-                                    : theme.palette.backgroundPrimaryTextPrimary
-                            )}
-                        >
-                            {children}
-                        </Text>
+                        {
+                            typeof children === 'string' ? (
+                                <Text
+                                    size={size === 'small' ? 10 : size === 'big' ? 24 : 14}
+                                    color={textColor ? textColor : flat ? (
+                                        primary ? theme.palette.primary
+                                            : accent ? theme.palette.accent
+                                            : theme.palette.backgroundPrimary
+                                    ) : (
+                                        primary ? theme.palette.primaryText
+                                            : accent ? theme.palette.accentTextPrimary
+                                            : theme.palette.backgroundPrimaryTextPrimary
+                                    )}
+                                >
+                                    {children}
+                                </Text>
+                            ) : children
+                        }
                     </Box>
                 </Touchable>
             </Box>

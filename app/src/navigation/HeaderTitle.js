@@ -14,7 +14,7 @@ class HeaderTitle extends React.Component {
         } = this.props
 
         const headerTitle = []
-        const maxWidth = typeof text === 'string' ? '100%' : `${100 / (text.length || 1)}%`
+        const maxWidth = typeof text === 'string' ? '100%' : `${80 / (text.length || 1)}%`
         const primaryTextProps = {
             weight: '700',
             primary: true,
@@ -60,7 +60,7 @@ class HeaderTitle extends React.Component {
         }
 
         return (
-            <Box centralize>
+            <Box alignCenter justifyStart fit>
                 <Spacer large/>
                 {headerTitle}
             </Box>

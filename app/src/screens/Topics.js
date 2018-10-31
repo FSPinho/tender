@@ -1,5 +1,5 @@
 import React from 'react'
-import {FlatList, StyleSheet, RefreshControl} from 'react-native'
+import {FlatList, StyleSheet} from 'react-native'
 import {withTheme} from "../theme";
 import withData from "../api/withData";
 import ListItem, {ITEM_HEIGHT} from "../components/ListItem";
@@ -9,8 +9,14 @@ import Text from "../components/Text";
 import Spacer from "../components/Spacer";
 import LineIcon from 'react-native-vector-icons/SimpleLineIcons'
 import {Routes} from "../navigation/RootNavigation";
+import FireBase from "react-native-firebase";
+import {Events} from "../constants/Analytics";
 
 class Topics extends React.Component {
+
+    componentDidMount() {
+        FireBase.analytics().logEvent(Events.TenderOpenTopics)
+    }
 
     shouldComponentUpdate(nextProps) {
         // return this.props.data.subjectsLoading !== nextProps.data.subjectsLoading

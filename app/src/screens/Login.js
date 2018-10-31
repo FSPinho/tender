@@ -1,5 +1,5 @@
 import React from 'react'
-import {StyleSheet} from 'react-native'
+import {StyleSheet, Image} from 'react-native'
 import {withTheme} from "../theme";
 import withData from "../api/withData";
 import Loading from "../components/Loading";
@@ -8,6 +8,12 @@ import {GoogleSignin, GoogleSigninButton} from 'react-native-google-signin';
 import firebase from 'react-native-firebase'
 import Alert from "../services/Alert";
 import {Routes} from "../navigation/RootNavigation";
+import Button from "../components/Button";
+import Text from "../components/Text";
+import Spacer from "../components/Spacer";
+import Icon from 'react-native-vector-icons/MaterialCommunityIcons'
+import FireBase from "react-native-firebase";
+import {Events} from "../constants/Analytics";
 
 class Login extends React.Component {
 
@@ -31,9 +37,11 @@ class Login extends React.Component {
             const currentUser = await firebase.auth().signInAndRetrieveDataWithCredential(credential)
             await this.props.data.doUpdateUser(currentUser)
 
+            FireBase.analytics().logEvent(Events.TenderSignIn)
             this.props.navigation.navigate(Routes.Home)
         } catch (e) {
             console.warn("Login:componentDidMount - SignInSilently login error:", e);
+            FireBase.analytics().logEvent(Events.TenderOpenLogin)
         }
         await this.changeLoading(false)
     }
@@ -47,6 +55,7 @@ class Login extends React.Component {
             const currentUser = await firebase.auth().signInAndRetrieveDataWithCredential(credential)
             this.props.data.doUpdateUser(currentUser)
 
+            FireBase.analytics().logEvent(Events.TenderSignIn)
             this.props.navigation.navigate(Routes.Home)
         } catch (e) {
             console.warn(e);
@@ -62,12 +71,20 @@ class Login extends React.Component {
         return (
             <Box secondary fit>
                 <Loading active={this.state.loading} size={56}>
-                    <Box fit centralize>
-                        <GoogleSigninButton
-                            style={{width: 312, height: 48}}
-                            size={GoogleSigninButton.Size.Wide}
-                            color={GoogleSigninButton.Color.Dark}
-                            onPress={this.doSignIn}/>
+                    <Box fit centralize column>
+                        <Image source={require('../resources/images/logo.png')}
+                               style={{width: 192, height: 192}}/>
+
+                        <Spacer vertical large/>
+
+                        <Button primary onPress={this.doSignIn}>
+                            <Icon name={'google'} size={24} color={theme.palette.primaryText}/>
+                            <Spacer large/>
+                            <Text weight={'900'} size={20}
+                                  color={theme.palette.primaryText}>
+                                Entrar com Google
+                            </Text>
+                        </Button>
                     </Box>
                 </Loading>
             </Box>

@@ -3,13 +3,13 @@ import ThemeProvider from "./theme/ThemeProvider";
 import FireBase from 'react-native-firebase'
 import RootNavigation from "./navigation/RootNavigation";
 import DataProvider from "./api/DataProvider";
+import SplashScreen from 'react-native-splash-screen'
 
 console.disableYellowBox = true;
 
 export default class App extends Component {
 
     async componentDidMount() {
-
         /**
          * Initialize Firebase Notifications
          * */
@@ -49,6 +49,11 @@ export default class App extends Component {
          * Initializing Firebase Admob
          * */
         FireBase.admob().initialize('ca-app-pub-5594222713152935~2780422532')
+
+        /**
+         * Hiding splash screen
+         * */
+        setTimeout(SplashScreen.hide, 1800)
     }
 
     componentWillUnmount() {
