@@ -20,7 +20,7 @@ lxml==4.2.5
 mechanize==0.3.7
 msgpack==0.5.6
 pkg-resources==0.0.0
-protobuf==3.6.1
+protobuf==3.15.0
 pyasn1==0.4.4
 pyasn1-modules==0.2.2
 pytz==2018.5
